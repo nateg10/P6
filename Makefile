@@ -20,7 +20,7 @@ DEPS      = $(patsubst %, $(ODIR)/%.d,  $(CCFILES) $(TARGETS))
 # Use gcc
 CXX = g++
 CXXFLAGS = -MMD -O2 -m$(BITS) -ggdb -std=c++11 -O2
-LDFLAGS = -m$(BITS)
+LDFLAGS = -m$(BITS) -pthread
 
 # Best to be safe...
 .DEFAULT_GOAL = all
