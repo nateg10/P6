@@ -45,6 +45,12 @@ class clist {
             mynode->value = key;
             prev->next = mynode;
             mynode->next = temp;
+	    /*node *printNode;
+	    printNode = head;
+	    while(printNode){
+	      printf("%i->", printNode->value);
+	      printNode = printNode->next;
+	      }*/
             return true;
 	} 
       } 
@@ -140,5 +146,6 @@ class clist {
     //clist(int): head(NULL) {
  clist(unsigned int&): head(NULL) {
 
-     }
+    }
+   
 };
