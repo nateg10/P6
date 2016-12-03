@@ -29,15 +29,20 @@ class clist {
 	return true;
       }
 
+      
       while(temp->next){
+	node * prev = temp;
 	temp = temp->next;
 	if(temp->value == key) return false;
-	temp = temp->next;
+	else if(temp->value > key)  
+	//temp = temp->next; //Nate I think this would skip some
       } 
       
       if(temp->value == key)return false;
       else{
+	node = new node();
 	temp->next = new node();
+	node->next = temp->next-next>
 	temp->next->value = key;
       }
       //release lock
