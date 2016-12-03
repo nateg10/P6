@@ -34,16 +34,22 @@ class clist {
 	node * prev = temp;
 	temp = temp->next;
 	if(temp->value == key) return false;
-	else if(temp->value > key)  
+	else if(temp->value > key){
+            node * mynode = new node();
+            mynode->value = key;
+            prev->next = mynode;
+            mynode->next = temp;
+            return true
+      } 
 	//temp = temp->next; //Nate I think this would skip some
       } 
       
       if(temp->value == key)return false;
       else{
-	node = new node();
-	temp->next = new node();
-	node->next = temp->next-next>
-	temp->next->value = key;
+	node * mynode = new node();
+      mynode->value = key;
+      prev->next = mynode;
+      mynode->next = temp;
       }
       //release lock
       return true;
