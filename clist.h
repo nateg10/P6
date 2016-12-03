@@ -6,24 +6,25 @@
 class clist {
     /// a node consists of a value and a pointer to another node
 
-    private std::mutex gate;
+ private:
+  std::mutex gate;
 
 
-    struct node
-    {
-        int value;
-        node* next;
-    };
+  struct node
+  {
+    int value;
+    node* next;
+  };
 
-    /// The head of the list is referenced by this pointer
-    node* head;
+  /// The head of the list is referenced by this pointer
+  node* head;
 
-  public:
+ public:
     /// insert *key* into the linked list if it doesn't already exist; return
     /// true if the key was added successfully.
     bool og_insert(int key) { 
       node *temp;
-
+      node *prev;
       if(head){
 	temp = head;
 	if(temp->value == key)return false;
@@ -34,9 +35,9 @@ class clist {
 	return true;
       }
 
-      
+      prev = temp;
       while(temp->next){
-	node * prev = temp;
+	prev = temp;
 	temp = temp->next;
 	if(temp->value == key) return false;
 	else if(temp->value > key){
@@ -44,16 +45,16 @@ class clist {
             mynode->value = key;
             prev->next = mynode;
             mynode->next = temp;
-            return true
-      } 
+            return true;
+	} 
       } 
       
       if(temp->value == key)return false;
       else{
 	node * mynode = new node();
-      mynode->value = key;
-      prev->next = mynode;
-      mynode->next = temp;
+	mynode->value = key;
+	temp->next = mynode;
+	//mynode->next = temp;
       }
       return true;
 
@@ -89,8 +90,8 @@ class clist {
             return true;
       }
 	else if(temp->value > key){
-            return false
-      } 
+	  return false;
+	} 
       }
 
       return false;
@@ -121,7 +122,7 @@ class clist {
             return true;
       }
 	else if(temp->value > key){
-            return false
+	  return false;
       } 
       }
 
@@ -131,12 +132,13 @@ class clist {
     /// return true if *key* is present in the list, false otherwise
     bool lookup(int key) {
           gate.lock();
-          bool result = og_lookup();
+          bool result = og_lookup(key);
           gate.unlock();
           return result;
     }
     /// constructor code goes here
-    clist(int): head(NULL) {
+    //clist(int): head(NULL) {
+ clist(unsigned int&): head(NULL) {
 
      }
 };

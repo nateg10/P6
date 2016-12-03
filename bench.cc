@@ -8,7 +8,7 @@
 #include "support.h"
 #include "clist.h"
 #include "rwlist.h"
-#include "chash.h"
+//#include "chash.h"
 #include "shash.h"
 
 /// help() - Print a help message
@@ -146,9 +146,9 @@ int main(int argc, char **argv) {
     else if (test == 'r') {
         bench<rwlist>(keyrange, ops, buckets, ratio, threads);
     }
-    else if (test == 'h') {
+    /*else if (test == 'h') {
         bench<chash>(keyrange, ops, buckets, ratio, threads);
-    }
+	}*/
     else if (test == 's') {
         bench<shash>(keyrange, ops, buckets, ratio, threads);
     }

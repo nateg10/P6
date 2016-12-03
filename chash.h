@@ -6,7 +6,7 @@
 ///       table of integers, implemented as an array of linked lists.
 class chash {
     /// The bucket list
-    clist buckets[];
+    clist buckets[3];
 
   public:
     /// insert *key* into the appropriate linked list if it doesn't already
