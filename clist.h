@@ -23,6 +23,7 @@ class clist {
     /// insert *key* into the linked list if it doesn't already exist; return
     /// true if the key was added successfully.
     bool og_insert(int key) { 
+      printf("INSERTING %i\n", key);
       node *temp;
       node *prev;
       if(head){
@@ -74,6 +75,7 @@ class clist {
     }
 
     bool og_remove(int key){
+      printf("REMOVING %i", key);
       node *temp;
 
       if(head){
@@ -112,7 +114,8 @@ class clist {
     }
 
     bool og_lookup(int key){
-          node *temp;
+      printf("LOOKING FOR %i", key);
+      node *temp;
 
       if(head){
 	temp = head;
