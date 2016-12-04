@@ -74,7 +74,9 @@ class rwlist {
     }
 
     bool insert(int key){
-          pthread_rwlock_trywrlock(&rwlock);
+      //printf("Inserting %i\n", key);
+      pthread_rwlock_trywrlock(&rwlock);
+      printf("Inserting %i\n", key);
           bool result = og_insert(key);
           pthread_rwlock_unlock(&rwlock);
           return result;
@@ -113,7 +115,8 @@ class rwlist {
     /// was removed successfully.
     bool remove(int key) {
           pthread_rwlock_trywrlock(&rwlock);
-          bool result = og_remove(key);
+	  printf("Removing %i\n", key);
+	  bool result = og_remove(key);
           pthread_rwlock_unlock(&rwlock);
           return result;
     }
@@ -144,7 +147,9 @@ class rwlist {
 
     /// return true if *key* is present in the list, false otherwise
     bool lookup(int key) {
+      //printf("Looking up %i\n", key);
           pthread_rwlock_tryrdlock(&rwlock);
+	  printf("Looking up %i\n", key);
           bool result = og_lookup(key);
           pthread_rwlock_unlock(&rwlock);
           return result;
