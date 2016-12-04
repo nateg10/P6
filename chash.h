@@ -39,6 +39,9 @@ class chash {
     /// constructor code goes here
  chash(unsigned _buckets):len(_buckets){
       int x = 0;
+
+      buckets = malloc(sizeof(clist *) * len);
+
       while(x < _buckets){
 	clist *member = new clist(_buckets);
 	buckets[x] = member;
