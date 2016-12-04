@@ -82,7 +82,7 @@ class rwlist {
                   return false;
             }
       }
-      printf("Inserting %i\n", key);
+      //printf("Inserting %i\n", key);
           bool result = og_insert(key);
           pthread_rwlock_unlock(&rwlock);
           return result;
@@ -127,7 +127,7 @@ class rwlist {
                   return false;
             }
       }
-	  printf("Removing %i\n", key);
+      //printf("Removing %i\n", key);
 	  bool result = og_remove(key);
           pthread_rwlock_unlock(&rwlock);
           return result;
@@ -167,7 +167,7 @@ class rwlist {
                   return false;
             }
           }
-	  printf("Looking up %i\n", key);
+	  //printf("Looking up %i\n", key);
           bool result = og_lookup(key);
           pthread_rwlock_unlock(&rwlock);
           return result;
