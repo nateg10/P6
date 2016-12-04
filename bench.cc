@@ -91,6 +91,7 @@ void bench(unsigned keyrange, unsigned iters, unsigned buckets, unsigned ratio, 
     for (int i = 0; i < nthreads; ++i) {
         threads.push_back(std::thread(task, i));
     }
+    cout<< "Suck my balls" << endl;
     for (int i = 0; i < nthreads; ++i) {
         threads[i].join();
     }
@@ -101,6 +102,8 @@ void bench(unsigned keyrange, unsigned iters, unsigned buckets, unsigned ratio, 
     auto elapsed =
         duration_cast<duration<double>>(end_time - start_time).count();
     cout << "Throughput: " << ((iters * nthreads) / elapsed) << endl;
+    fflush(stdout);
+    fflush(stderr);
 }
 
 /// main() - parse command line, create a socket, handle requests
