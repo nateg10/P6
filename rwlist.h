@@ -3,6 +3,11 @@
 /// TODO: complete this implementation of a thread-safe (concurrent) sorted
 /// linked list of integers, which should use readers/writer locking.
 class rwlist {
+    
+    private:
+    std::mutex readgate;
+    std::mutex writegate;
+    
     /// a node consists of a value and a pointer to another node
     struct node
     {
@@ -16,12 +21,126 @@ class rwlist {
   public:
     /// insert *key* into the linked list if it doesn't already exist; return
     /// true if the key was added successfully.
-    bool insert(int key) { return false; }
+    bool og_insert(int key) { 
+      node *temp;
+      node *prev;
+      if(head){
+	temp = head;
+	if(temp->value == key)return false;
+      } 
+      else{
+	head = new node();
+	head->value = key;
+	return true;
+      }
+
+      prev = temp;
+      while(temp->next){
+	prev = temp;
+	temp = temp->next;
+	if(temp->value == key) return false;
+	else if(temp->value > key){
+            node * mynode = new node();
+            mynode->value = key;
+            prev->next = mynode;
+            mynode->next = temp;
+	    /*node *printNode;
+	    printNode = head;
+	    while(printNode){
+	      printf("%i->", printNode->value);
+	      printNode = printNode->next;
+	      }*/
+            return true;
+	} 
+      } 
+      
+      if(temp->value == key)return false;
+      else{
+	node * mynode = new node();
+	mynode->value = key;
+	temp->next = mynode;
+	//mynode->next = temp;
+      }
+      return true;
+
+    }
+
+    bool insert(int key){
+          writegate.lock();
+          bool result = og_insert(key);
+          writegate.unlock();
+          return result;
+    }
+
+    bool og_remove(int key){
+      node *temp;
+
+      if(head){
+	temp = head;
+	if(temp->value == key){
+            head = head->next;
+            delete(temp);
+            return true;
+      }
+      }else{
+            return false;
+      }
+
+      while(temp->next){
+	node * prev = temp;
+	temp = temp->next;
+	if(temp->value == key){
+            prev->next = temp->next;
+            delete(temp);
+            return true;
+      }
+	else if(temp->value > key){
+	  return false;
+	} 
+      }
+
+      return false;
+    }
     /// remove *key* from the list if it was present; return true if the key
     /// was removed successfully.
-    bool remove(int key) { return false; }
+    bool remove(int key) {
+          writegate.lock();
+          bool result = og_remove(key);
+          writegate.unlock();
+          return result;
+    }
+
+    bool og_lookup(int key){
+          node *temp;
+
+      if(head){
+	temp = head;
+	if(temp->value == key)return true;
+      }else{
+            return false;
+      }
+
+      while(temp->next){
+	node * prev = temp;
+	temp = temp->next;
+	if(temp->value == key){
+            return true;
+      }
+	else if(temp->value > key){
+	  return false;
+      } 
+      }
+
+      return false;
+    }
+
     /// return true if *key* is present in the list, false otherwise
-    bool lookup(int key) { return false; }
+    bool lookup(int key) {
+          readgate.lock();
+          bool result = og_lookup(key);
+          readgate.unlock();
+          return result;
+    }
     /// constructor code goes here
     rwlist(int): head(NULL) { }
 };
