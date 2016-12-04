@@ -10,8 +10,8 @@ class rwlist {
     std::mutex readgate;
     std::mutex writegate;
     std::mutex gate;
-    int readers
-    bool writing
+    int readers;
+    bool writing;
 
     pthread_rwlock_t  rwlock;
     
@@ -76,7 +76,7 @@ class rwlist {
     bool insert(int key){
           pthread_rwlock_trywrlock(&rwlock);
           bool result = og_insert(key);
-          pthread_rwlock_unlock()
+          pthread_rwlock_unlock();
           return result;
     }
 
@@ -114,7 +114,7 @@ class rwlist {
     bool remove(int key) {
           pthread_rwlock_trywrlock(&rwlock);
           bool result = og_remove(key);
-          pthread_rwlock_unlock()
+          pthread_rwlock_unlock();
           return result;
     }
 
@@ -146,7 +146,7 @@ class rwlist {
     bool lookup(int key) {
           pthread_rwlock_tryrdlock(&rwlock);
           bool result = og_lookup(key);
-          pthread_rwlock_unlock()
+          pthread_rwlock_unlock();
           return result;
     }
     /// constructor code goes here
