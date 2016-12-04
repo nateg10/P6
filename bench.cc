@@ -95,6 +95,8 @@ void bench(unsigned keyrange, unsigned iters, unsigned buckets, unsigned ratio, 
         threads[i].join();
     }
 
+    fflush(stdout);
+    fflush(stderr);
     // print the benchmark throughput
     auto elapsed =
         duration_cast<duration<double>>(end_time - start_time).count();
