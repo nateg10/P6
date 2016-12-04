@@ -1,5 +1,7 @@
 #pragma once
 
+#include <pthread.h>
+
 /// TODO: complete this implementation of a thread-safe (concurrent) sorted
 /// linked list of integers, which should use readers/writer locking.
 class rwlist {
@@ -7,7 +9,13 @@ class rwlist {
     private:
     std::mutex readgate;
     std::mutex writegate;
+    std::mutex gate;
+    int readers
+    bool writing
+
+    pthread_rwlock_t  rwlock;
     
+
     /// a node consists of a value and a pointer to another node
     struct node
     {
@@ -66,9 +74,9 @@ class rwlist {
     }
 
     bool insert(int key){
-          writegate.lock();
+          pthread_rwlock_trywrlock(&rwlock);
           bool result = og_insert(key);
-          writegate.unlock();
+          pthread_rwlock_unlock()
           return result;
     }
 
@@ -104,9 +112,9 @@ class rwlist {
     /// remove *key* from the list if it was present; return true if the key
     /// was removed successfully.
     bool remove(int key) {
-          writegate.lock();
+          pthread_rwlock_trywrlock(&rwlock);
           bool result = og_remove(key);
-          writegate.unlock();
+          pthread_rwlock_unlock()
           return result;
     }
 
@@ -136,11 +144,13 @@ class rwlist {
 
     /// return true if *key* is present in the list, false otherwise
     bool lookup(int key) {
-          readgate.lock();
+          pthread_rwlock_tryrdlock(&rwlock);
           bool result = og_lookup(key);
-          readgate.unlock();
+          pthread_rwlock_unlock()
           return result;
     }
     /// constructor code goes here
-    rwlist(int): head(NULL) { }
+    rwlist(int): head(NULL) {
+        rwlock = PTHREAD_RWLOCK_INITIALIZER;
+     }
 };
