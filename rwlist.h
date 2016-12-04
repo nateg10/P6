@@ -75,7 +75,13 @@ class rwlist {
 
     bool insert(int key){
       //printf("Inserting %i\n", key);
-      pthread_rwlock_trywrlock(&rwlock);
+      int e;
+      while((e = pthread_rwlock_trywrlock(&rwlock))){
+            if(e != EBUSY){
+                  printf("ERROR: inserting %i erron num %i", key, e);
+                  return false;
+            }
+      }
       printf("Inserting %i\n", key);
           bool result = og_insert(key);
           pthread_rwlock_unlock(&rwlock);
@@ -114,7 +120,13 @@ class rwlist {
     /// remove *key* from the list if it was present; return true if the key
     /// was removed successfully.
     bool remove(int key) {
-          pthread_rwlock_trywrlock(&rwlock);
+      int e;
+      while((e = pthread_rwlock_trywrlock(&rwlock))){
+            if(e != EBUSY){
+                  printf("ERROR: removing %i erron num %i", key, e);
+                  return false;
+            }
+      }
 	  printf("Removing %i\n", key);
 	  bool result = og_remove(key);
           pthread_rwlock_unlock(&rwlock);
@@ -148,7 +160,13 @@ class rwlist {
     /// return true if *key* is present in the list, false otherwise
     bool lookup(int key) {
       //printf("Looking up %i\n", key);
-          pthread_rwlock_tryrdlock(&rwlock);
+          int e;
+          while((e = pthread_rwlock_tryrdlock(&rwlock))){
+                if(e != EBUSY){
+                  printf("ERROR: lookingup %i erron num %i", key, e);
+                  return false;
+            }
+          }
 	  printf("Looking up %i\n", key);
           bool result = og_lookup(key);
           pthread_rwlock_unlock(&rwlock);
