@@ -8,7 +8,7 @@
 class chash {
 
   //rwlist **buckets;
-  clist *buckets;
+  clist **buckets;
   
   public:
 
@@ -33,42 +33,42 @@ class chash {
     /// insert *key* into the appropriate linked list if it doesn't already
     /// exist; return true if the key was added successfully.
     bool insert(int key) { 
-      printf("insert %i in %i ", key, getHash(key));
+      //printf("insert %i in %i ", key, getHash(key));
       fflush(stdout);
       
       bool res = buckets[getHash(key)]->insert(key);
-      printf(" i\n");
+      //printf(" i\n");
       return res;
     }
     /// remove *key* from the appropriate list if it was present; return true
     /// if the key was removed successfully.
     
     bool remove(int key) {
-      printf("remove %i in %i ", key, getHash(key));
+      //printf("remove %i in %i ", key, getHash(key));
       fflush(stdout);
       bool res = buckets[getHash(key)]->remove(key);
-      printf(" r\n");
+      //printf(" r\n");
       return res;
     }
     /// return true if *key* is present in the appropriate list, false
     /// otherwise
     bool lookup(int key) {
-      printf("lookup %i in %i ", key, getHash(key));
+      //printf("lookup %i in %i ", key, getHash(key));
       fflush(stdout);
       bool res = buckets[getHash(key)]->lookup(key);
-       printf(" l\n");
+      //printf(" l\n");
       return res;
     }
     /// constructor code goes here
  chash(unsigned _buckets):len(_buckets){
       int x = 0;
 
-      //buckets = malloc(sizeof(clist) * len);
-      buckets = new clist[len];
+      buckets = (clist**) malloc(sizeof(clist) * len);
+      //buckets = new clist[len];
 	
       while(x < _buckets){
 	//rwlist *member = new rwlist(_buckets);
-	clist member = new clist(_buckets);
+	clist *member = new clist(_buckets);
 	buckets[x] = member;
 	x++;
       }

@@ -26,7 +26,7 @@ class clist {
     /// insert *key* into the linked list if it doesn't already exist; return
     /// true if the key was added successfully.
     bool og_insert(int key) { 
-      printf("INSERTING %i\n", key);
+      //printf("INSERTING %i\n", key);
       node *temp;
       node *prev;
       if(head){
@@ -72,7 +72,7 @@ class clist {
 
     bool insert(int key){
           while(!gate.try_lock()){
-	    cout << whoHasLock << endl;
+	    //cout << whoHasLock << endl;
           }
           whoHasLock = "insert";
           bool result = og_insert(key);
@@ -82,7 +82,7 @@ class clist {
     }
 
     bool og_remove(int key){
-      printf("REMOVING %i", key);
+      //printf("REMOVING %i", key);
       node *temp;
 
       if(head){
@@ -115,7 +115,7 @@ class clist {
     /// was removed successfully.
     bool remove(int key) {
           while(!gate.try_lock()){
-	    cout << whoHasLock << endl;
+	    //cout << whoHasLock << endl;
 	    
           }
           whoHasLock = "remove";
@@ -126,7 +126,7 @@ class clist {
     }
 
     bool og_lookup(int key){
-      printf("LOOKING FOR %i", key);
+      //printf("LOOKING FOR %i", key);
       node *temp;
 
       if(head){
@@ -153,7 +153,7 @@ class clist {
     /// return true if *key* is present in the list, false otherwise
     bool lookup(int key) {
           while(!gate.try_lock()){
-	    cout << whoHasLock << endl;
+	    //cout << whoHasLock << endl;
 	    
           }
           whoHasLock = "lookup";
