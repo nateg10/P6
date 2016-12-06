@@ -7,8 +7,8 @@
 ///       table of integers, implemented as an array of linked lists.
 class chash {
 
-  rwlist **buckets;
-  //clist **buckets;
+  //rwlist **buckets;
+  clist *buckets;
   
   public:
 
@@ -63,11 +63,12 @@ class chash {
  chash(unsigned _buckets):len(_buckets){
       int x = 0;
 
-      //buckets = new clist[len]; //malloc(sizeof(clist) * len);
-
+      //buckets = malloc(sizeof(clist) * len);
+      buckets = new clist[len];
+	
       while(x < _buckets){
-	rwlist *member = new rwlist(_buckets);
-	//clist *member = new clist(_buckets);
+	//rwlist *member = new rwlist(_buckets);
+	clist member = new clist(_buckets);
 	buckets[x] = member;
 	x++;
       }

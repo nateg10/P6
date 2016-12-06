@@ -1,16 +1,17 @@
 #pragma once
 #include <mutex>
+#include <iostream>
 
+using namespace std;
 /// TODO: complete this implementation of a thread-safe (concurrent) sorted
 /// linked list of integers
 class clist {
     /// a node consists of a value and a pointer to another node
-
  private:
   std::mutex gate;
 
-  char * nobody = "Lock is Free";
-  char * whoHasLock[100];
+  std::string nobody = "Lock is Free";
+  std::string whoHasLock;
 
   struct node
   {
@@ -71,12 +72,12 @@ class clist {
 
     bool insert(int key){
           while(!gate.try_lock()){
-                printf("%s\n", whoHasLock);
+	    cout << whoHasLock << endl;
           }
           whoHasLock = "insert";
           bool result = og_insert(key);
           gate.unlock();
-          whoHasLock = nobody;
+          whoHasLock = "nobody";
           return result;
     }
 
@@ -114,11 +115,12 @@ class clist {
     /// was removed successfully.
     bool remove(int key) {
           while(!gate.try_lock()){
-                printf("%s\n", whoHasLock);
+	    cout << whoHasLock << endl;
+	    
           }
           whoHasLock = "remove";
           bool result = og_remove(key);
-          whoHasLock = nobody;
+          whoHasLock = "nobody";
           gate.unlock();
           return result;
     }
@@ -151,11 +153,12 @@ class clist {
     /// return true if *key* is present in the list, false otherwise
     bool lookup(int key) {
           while(!gate.try_lock()){
-                printf("%s\n", whoHasLock);
+	    cout << whoHasLock << endl;
+	    
           }
           whoHasLock = "lookup";
           bool result = og_lookup(key);
-          whoHasLock = nobody;
+          whoHasLock = "nobody";
           gate.unlock();
           return result;
     }
