@@ -68,7 +68,7 @@ class clist {
     }
 
     bool insert(int key){
-          gate.lock();
+          while(!gate.try_lock());
           bool result = og_insert(key);
           gate.unlock();
           return result;
@@ -107,7 +107,7 @@ class clist {
     /// remove *key* from the list if it was present; return true if the key
     /// was removed successfully.
     bool remove(int key) {
-          gate.lock();
+          while(!gate.try_lock());
           bool result = og_remove(key);
           gate.unlock();
           return result;
@@ -140,7 +140,7 @@ class clist {
 
     /// return true if *key* is present in the list, false otherwise
     bool lookup(int key) {
-          gate.lock();
+          while(!gate.try_lock());
           bool result = og_lookup(key);
           gate.unlock();
           return result;
