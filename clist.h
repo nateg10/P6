@@ -9,6 +9,8 @@ class clist {
  private:
   std::mutex gate;
 
+  char * nobody = "Lock is Free";
+  char * whoHasLock[100];
 
   struct node
   {
@@ -68,9 +70,13 @@ class clist {
     }
 
     bool insert(int key){
-          while(!gate.try_lock());
+          while(!gate.try_lock()){
+                printf("%s\n", whoHasLock);
+          }
+          whoHasLock = "insert";
           bool result = og_insert(key);
           gate.unlock();
+          whoHasLock = nobody;
           return result;
     }
 
@@ -107,8 +113,12 @@ class clist {
     /// remove *key* from the list if it was present; return true if the key
     /// was removed successfully.
     bool remove(int key) {
-          while(!gate.try_lock());
+          while(!gate.try_lock()){
+                printf("%s\n", whoHasLock);
+          }
+          whoHasLock = "remove";
           bool result = og_remove(key);
+          whoHasLock = nobody;
           gate.unlock();
           return result;
     }
@@ -140,8 +150,12 @@ class clist {
 
     /// return true if *key* is present in the list, false otherwise
     bool lookup(int key) {
-          while(!gate.try_lock());
+          while(!gate.try_lock()){
+                printf("%s\n", whoHasLock);
+          }
+          whoHasLock = "lookup";
           bool result = og_lookup(key);
+          whoHasLock = nobody;
           gate.unlock();
           return result;
     }
