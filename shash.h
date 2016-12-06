@@ -7,25 +7,24 @@
 class shash {
   private:
     
-
-    struct sNode
-    {
-      std::mutex gate;
-      node* head;
-    };
-
     struct node
     {
       int value;
       node* next;
     };
 
+    struct sNode
+    {
+      std::mutex gate;
+      struct node* head;
+    };
+  
     int len;
     sNode* bucket;
 
   public:
     bool og_insert(int key, node * head) { 
-      printf("INSERTING %i\n", key);
+      //printf("INSERTING %i\n", key);
       node *temp;
       node *prev;
       if(head){
@@ -132,9 +131,9 @@ class shash {
     /// exist; return true if the key was added successfully.
     bool insert(int key) { 
       int i = getHash(key);
-      bucket[i]->gate.lock();
-      bool res = og_insert(key, bucket[i]->head);
-      bucket[i]->gate.unlock();
+      bucket[i].gate.lock();
+      bool res = og_insert(key, bucket[i].head);
+      bucket[i].gate.unlock();
       return res;
     }
 
@@ -142,23 +141,23 @@ class shash {
     /// if the key was removed successfully.
     bool remove(int key) {
       int i = getHash(key);
-      bucket[i]->gate.lock();
-      bool res = og_remove(key, bucket[i]->head);
-      bucket[i]->gate.unlock();
+      bucket[i].gate.lock();
+      bool res = og_remove(key, bucket[i].head);
+      bucket[i].gate.unlock();
       return res;
     }
     /// return true if *key* is present in the appropriate list, false
     /// otherwise
     bool lookup(int key) {
       int i = getHash(key);
-      bucket[i]->gate.lock();
-      bool res = og_lookup(key, bucket[i]->head);
-      bucket[i]->gate.unlock();
+      bucket[i].gate.lock();
+      bool res = og_lookup(key, bucket[i].head);
+      bucket[i].gate.unlock();
       return res;
     }
     /// constructor code goes here
     shash(unsigned _buckets):len(_buckets) { 
 
-      bucket = new sNode[len]
+      bucket = new sNode[len];
     }
 };
