@@ -91,7 +91,7 @@ void bench(unsigned keyrange, unsigned iters, unsigned buckets, unsigned ratio, 
     for (int i = 0; i < nthreads; ++i) {
         threads.push_back(std::thread(task, i));
     }
-    cout<< "Suck my balls" << endl;
+    cout<< "Waiting for threads..." << endl;
     for (int i = 0; i < nthreads; ++i) {
         threads[i].join();
     }
