@@ -9,14 +9,19 @@
 ///       operation.
 class shash2 {
   
-  node **buckets;
+  sNode **buckets;
   
  private:
 
   struct node{
     int value;
-    node* next 
-    std::mytex gate;
+    node* next;
+  };
+
+  struct sNode
+  {
+    std::mutex gate;
+    struct node* head;
   };
   
   int len;
@@ -24,6 +29,7 @@ class shash2 {
   public:
 
   bool og_insert(int key, node* head){
+    
   }
 
   bool og_remove(int key, node* head){
@@ -32,43 +38,83 @@ class shash2 {
   bool og_lookup(int key, node* head){
   }
 
+  int compare(const void *a, const void *b){
+    return ( *(int*)a - *(int*)b );
+  }
 
   int getHash(int key){
     return key % len;
   }
-    /// insert /num/ values from /keys/ array into the hash, and return the
-    /// success/failure of each insert in /results/ array.
-    void insert(int* keys, bool* results, int num) {
-      for(int x = 0; x < num; x++){
-	int index = getHash(keys[x]);
-	results[x] = og_insert(keys[x], buckets[index]);
-	return res;
-      }
+  //1. Get an array of all the keys' index values
+  //2. Sort this list
+  //3. Acquire the locks for all of these lists in the sentinal node
+  //4. call the og_insert function in order
+  void insert(int* keys, bool* results, int num) {
+    int indexVals[num];
+    // 1.
+    for(int x = 0; x < num; x++){
+      indexVals[x] = getHash(keys[x]);
     }
-    /// remove *key* from the list if it was present; return true if the key
-    /// was removed successfully.
-    void remove(int* keys, bool* results, int num) { 
-      for(int x = 0; x < num; x++){
-        int index = getHash(keys[x]);
-	results[x] = og_remove(keys[x], buckets[index]);
-	return res;
-      }
+    //2.
+    qsort(indexValues, num, sizeof(int), compare);
+    //3.
+    for(int x = 0; x < num; x++){
+      buckets[indexVals[x]].gate.lock();
     }
-    /// return true if *key* is present in the list, false otherwise
-    void lookup(int* keys, bool* results, int num) { 
-      for(int x = 0; x < num; x++){
-        int index = getHash(keys[x]);
-	results[x] = og_insert(keys[x], buckets[index]);
-	return res;
-      }
+    //4.
+    for(int x = 0; x < num; x++){
+      results[x] = og_insert(keys[x], buckets[indexVals[x]].head);
     }
-    /// constructor code goes here
+    return results;
+
+  }
+   
+  void remove(int* keys, bool* results, int num) { 
+    int indexVals[num];
+    // 1.                                                              
+    for(int x = 0; x < num; x++){
+      indexVals[x] = getHash(keys[x]);
+    }
+    //2.                                                               
+    qsort(indexValues, num, sizeof(int), compare);
+    //3.                                                               
+    for(int x = 0; x < num; x++){
+      buckets[indexVals[x]].gate.lock();
+    }
+    //4.                                                               
+    for(int x = 0; x < num; x++){
+      results[x] = og_insert(keys[x], buckets[indexVals[x]].head);
+    }
+    return results;
+  }
+   
+
+  void lookup(int* keys, bool* results, int num) { 
+    int indexVals[num];
+    // 1.                                                            
+    for(int x = 0; x < num; x++){
+      indexVals[x] = getHash(keys[x]);
+    }
+    //2.                                                             
+    qsort(indexValues, num, sizeof(int), compare);
+    //3.                                                            
+    for(int x = 0; x < num; x++){
+      buckets[indexVals[x]].gate.lock();
+    }
+    //4.                                                             
+    for(int x = 0; x < num; x++){
+      results[x] = og_insert(keys[x], buckets[indexVals[x]].head);
+    }
+    return results;
+  }
+  
+    
  shash2(unsigned _buckets):len(_buckets) { 
       int x = 0;
-      buckets = (node**)malloc(sizeof(node) * len);
+      buckets = (sNode**)malloc(sizeof(sNode) * len);
       while(x < len){
-	node *head = new node(len);
-	buckets[x] = member;
+	sNode *head = new sNode();
+	buckets[x] = head;
 	x++;
       }
     }

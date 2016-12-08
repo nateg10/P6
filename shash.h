@@ -24,7 +24,6 @@ class shash {
 
   public:
     bool og_insert(int key, node * head) { 
-      //printf("INSERTING %i\n", key);
       node *temp;
       node *prev;
       if(head){
@@ -47,12 +46,6 @@ class shash {
             mynode->value = key;
             prev->next = mynode;
             mynode->next = temp;
-	    /*node *printNode;
-	    printNode = head;
-	    while(printNode){
-	      printf("%i->", printNode->value);
-	      printNode = printNode->next;
-	      }*/
             return true;
 	} 
       } 
