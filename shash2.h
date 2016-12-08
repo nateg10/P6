@@ -1,5 +1,6 @@
 #pragma once
 #include <mutex>
+#include <iostream>
 
 /// TODO: complete this implementation of a thread-safe (concurrent) hash
 ///       table of integers, implemented as an array of linked lists.  In
@@ -7,6 +8,9 @@
 ///       contains the lock, so we can't just reuse the clist implementation.
 ///       In addition, the API now allows for multiple keys on each
 ///       operation.
+
+using namespace std;
+
 class shash2 {
   
   
@@ -134,6 +138,7 @@ class shash2 {
   //3. Acquire the locks for all of these lists in the sentinal node
   //4. call the og_insert function in order
   bool *insert(int* keys, bool* results, int num) {
+    //cout << "Insert" << endl;
     int indexVals[num];
     // 1.
     for(int x = 0; x < num; x++){
@@ -141,8 +146,19 @@ class shash2 {
     }
     //2.
     qsort(indexVals, num, sizeof(int), compare);
+    /*
+    for(int i = 0; i < num; i++){
+      cout << indexVals[i] << endl;
+    }
+    */
     //3.
+    int last = -1;
     for(int x = 0; x < num; x++){
+      if(last == indexVals[x]){
+	continue;
+      }
+      last = indexVals[x];
+      //cout << "Insert " << indexVals[x] << endl;
       buckets[indexVals[x]]->gate.lock();
     }
     //4.
@@ -157,6 +173,7 @@ class shash2 {
   }
    
   bool * remove(int* keys, bool* results, int num) { 
+    //cout << "Remove" << endl;
     int indexVals[num];
     // 1.                                                              
     for(int x = 0; x < num; x++){
@@ -164,8 +181,14 @@ class shash2 {
     }
     //2.                                                               
     qsort(indexVals, num, sizeof(int), compare);
-    //3.                                                               
+    //3.
+    int last = -1;
     for(int x = 0; x < num; x++){
+      if(last == indexVals[x]){
+	continue;
+      }
+      last = indexVals[x];
+      //cout << "Remove " << indexVals[x] << endl;
       buckets[indexVals[x]]->gate.lock();
     }
     //4.                                                               
@@ -180,6 +203,7 @@ class shash2 {
    
 
   bool * lookup(int* keys, bool* results, int num) { 
+    //cout << "Lookpup " << endl;
     int indexVals[num];
     // 1.                                                            
     for(int x = 0; x < num; x++){
@@ -187,8 +211,14 @@ class shash2 {
     }
     //2.                                                             
     qsort(indexVals, num, sizeof(int), compare);
-    //3.                                                            
+    //3.
+    int last = -1;
     for(int x = 0; x < num; x++){
+      if(last == indexVals[x]){
+	continue;
+      }
+      last = indexVals[x];
+      //cout << "Lookup " << indexVals[x] << endl;
       buckets[indexVals[x]]->gate.lock();
     }
     //4.                                                             
