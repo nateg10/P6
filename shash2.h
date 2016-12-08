@@ -1,5 +1,5 @@
-#include "clist"
 #pragma once
+#include <mutex>
 
 /// TODO: complete this implementation of a thread-safe (concurrent) hash
 ///       table of integers, implemented as an array of linked lists.  In
@@ -9,10 +9,9 @@
 ///       operation.
 class shash2 {
   
-  sNode **buckets;
   
  private:
-
+  
   struct node{
     int value;
     node* next;
@@ -21,24 +20,109 @@ class shash2 {
   struct sNode
   {
     std::mutex gate;
-    struct node* head;
+    node* head;
   };
-  
+
+  sNode **buckets;
+
   int len;
 
   public:
 
   bool og_insert(int key, node* head){
-    
+    node *temp;
+    node *prev;
+    if(head){
+      temp = head;
+      if(temp->value == key)return false;
+    }
+    else{
+      head = new node();
+      head->value = key;
+      return true;
+    }
+
+    prev = temp;
+    while(temp->next){
+      prev = temp;
+      temp = temp->next;
+      if(temp->value == key) return false;
+      else if(temp->value > key){
+	node * mynode = new node();
+	mynode->value = key;
+	prev->next = mynode;
+	mynode->next = temp;
+	return true;
+      }
+    }
+
+    if(temp->value == key)return false;
+    else{
+      node * mynode = new node();
+      mynode->value = key;
+      temp->next = mynode;
+      //mynode->next = temp;                                          
+    }
+    return true;
   }
 
   bool og_remove(int key, node* head){
+    node *temp;
+
+    if(head){
+      temp = head;
+      if(temp->value == key){
+	head = head->next;
+	delete(temp);
+	return true;
+      }
+    }else{
+      return false;
+    }
+
+    while(temp->next){
+      node * prev = temp;
+      temp = temp->next;
+      if(temp->value == key){
+	prev->next = temp->next;
+	delete(temp);
+	return true;
+      }
+      else if(temp->value > key){
+	return false;
+      }
+    }
+
+    return false;
+
   }
 
   bool og_lookup(int key, node* head){
+    node *temp;
+    
+    if(head){
+      temp = head;
+      if(temp->value == key)return true;
+    }else{
+      return false;
+    }
+    
+    while(temp->next){
+      node * prev = temp;
+      temp = temp->next;
+      if(temp->value == key){
+	return true;
+      }
+      else if(temp->value > key){
+	return false;
+      }
+    }
+    
+    return false;
   }
+  
 
-  int compare(const void *a, const void *b){
+  static int compare(const void *a, const void *b){
     return ( *(int*)a - *(int*)b );
   }
 
@@ -49,61 +133,70 @@ class shash2 {
   //2. Sort this list
   //3. Acquire the locks for all of these lists in the sentinal node
   //4. call the og_insert function in order
-  void insert(int* keys, bool* results, int num) {
+  bool *insert(int* keys, bool* results, int num) {
     int indexVals[num];
     // 1.
     for(int x = 0; x < num; x++){
       indexVals[x] = getHash(keys[x]);
     }
     //2.
-    qsort(indexValues, num, sizeof(int), compare);
+    qsort(indexVals, num, sizeof(int), compare);
     //3.
     for(int x = 0; x < num; x++){
-      buckets[indexVals[x]].gate.lock();
+      buckets[indexVals[x]]->gate.lock();
     }
     //4.
     for(int x = 0; x < num; x++){
-      results[x] = og_insert(keys[x], buckets[indexVals[x]].head);
+      results[x] = og_insert(keys[x], buckets[indexVals[x]]->head);
+    }
+    for(int x = 0; x < num; x++){
+      buckets[indexVals[x]]->gate.unlock();
     }
     return results;
 
   }
    
-  void remove(int* keys, bool* results, int num) { 
+  bool * remove(int* keys, bool* results, int num) { 
     int indexVals[num];
     // 1.                                                              
     for(int x = 0; x < num; x++){
       indexVals[x] = getHash(keys[x]);
     }
     //2.                                                               
-    qsort(indexValues, num, sizeof(int), compare);
+    qsort(indexVals, num, sizeof(int), compare);
     //3.                                                               
     for(int x = 0; x < num; x++){
-      buckets[indexVals[x]].gate.lock();
+      buckets[indexVals[x]]->gate.lock();
     }
     //4.                                                               
     for(int x = 0; x < num; x++){
-      results[x] = og_insert(keys[x], buckets[indexVals[x]].head);
+      results[x] = og_insert(keys[x], buckets[indexVals[x]]->head);
+    }
+    for(int x = 0; x < num; x++){
+      buckets[indexVals[x]]->gate.unlock();
     }
     return results;
   }
    
 
-  void lookup(int* keys, bool* results, int num) { 
+  bool * lookup(int* keys, bool* results, int num) { 
     int indexVals[num];
     // 1.                                                            
     for(int x = 0; x < num; x++){
       indexVals[x] = getHash(keys[x]);
     }
     //2.                                                             
-    qsort(indexValues, num, sizeof(int), compare);
+    qsort(indexVals, num, sizeof(int), compare);
     //3.                                                            
     for(int x = 0; x < num; x++){
-      buckets[indexVals[x]].gate.lock();
+      buckets[indexVals[x]]->gate.lock();
     }
     //4.                                                             
     for(int x = 0; x < num; x++){
-      results[x] = og_insert(keys[x], buckets[indexVals[x]].head);
+      results[x] = og_insert(keys[x], buckets[indexVals[x]]->head);
+    }
+    for(int x = 0; x < num; x++){
+      buckets[indexVals[x]]->gate.unlock();
     }
     return results;
   }

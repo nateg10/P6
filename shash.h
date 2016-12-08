@@ -16,7 +16,7 @@ class shash {
     struct sNode
     {
       std::mutex gate;
-      struct node* head;
+      node* head;
     };
   
     int len;
@@ -93,33 +93,33 @@ class shash {
 
     bool og_lookup(int key, node * head){
       node *temp;
-
+      
       if(head){
 	temp = head;
 	if(temp->value == key)return true;
       }else{
-            return false;
+	return false;
       }
-
+      
       while(temp->next){
 	node * prev = temp;
 	temp = temp->next;
 	if(temp->value == key){
-            return true;
-      }
+	  return true;
+	}
 	else if(temp->value > key){
 	  return false;
-      } 
+	} 
       }
-
+      
       return false;
     }
-
+    
     int getHash(int key){
       int i = (key % len);
       return i;
     }
-
+    
     /// insert *key* into the appropriate linked list if it doesn't already
     /// exist; return true if the key was added successfully.
     bool insert(int key) { 
