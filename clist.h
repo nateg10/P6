@@ -170,6 +170,9 @@ class clist {
    ~clist(){
          node * next;
          node * temp = head;
+         if(temp == NULL){
+               return;
+         }
          next = temp->next;
          while(next){
                delete(temp);
