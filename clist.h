@@ -167,5 +167,15 @@ class clist {
  clist(unsigned int&): head(NULL) {
 
     }
-   
+   ~clist(){
+         node * next;
+         node * temp = head;
+         next = temp->next;
+         while(next){
+               delete(temp);
+               temp = next;
+               next = temp->next;
+         }
+         delete(temp);
+   }
 };
