@@ -75,4 +75,9 @@ class chash {
 
       printf("Num of buckets %i\n", len);
     }
+  ~chash(){
+    for(int i = 0; i < len; i++){
+      delete buckets[i];
+    }
+  }
 };

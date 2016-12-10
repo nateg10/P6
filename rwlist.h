@@ -176,4 +176,15 @@ class rwlist {
     rwlist(int): head(NULL) {
         rwlock = PTHREAD_RWLOCK_INITIALIZER;
      }
+     ~rwlist(){
+           node * next;
+         node * temp = head;
+         next = temp->next;
+         while(next){
+               delete(temp);
+               temp = next;
+               next = temp->next;
+         }
+         delete(temp);
+     }
 };

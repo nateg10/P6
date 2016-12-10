@@ -241,4 +241,18 @@ class shash2 {
 	x++;
       }
     }
+
+  ~shash2(){
+    for(int i = 0; i < len; i++){
+      node * next;
+         node * temp = bucket[i]->head;
+         next = temp->next;
+         while(next){
+               delete(temp);
+               temp = next;
+               next = temp->next;
+         }
+         delete(temp);
+    }
+  }
 };
